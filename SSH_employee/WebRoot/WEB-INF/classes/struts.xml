@@ -5,7 +5,20 @@
       
 <struts>  
     <package name="ssh" extends="struts-default" namespace="/">
+    	<!-- 注册拦截器 -->
+    	<interceptors>
+    		<interceptor name="auth" class="cn.muke.employee.interceptor.AuthInterceptor"></interceptor>
+    		<!-- 自定义拦截器栈 -->
+    		<interceptor-stack name="myStack">
+    			<interceptor-ref name="defaultStack"></interceptor-ref>
+    			<interceptor-ref name="auth">
+    				<param name="excludeMethods">login</param>
+    			</interceptor-ref>
+    		</interceptor-stack>
+    	</interceptors>
+    	
     	<action name="employee_*" class="employeeAction" method="{1}">
+    		<result name="login">/index.jsp</result>
     		<result name="input">/index.jsp</result>
     		<result name="success" type="redirect">/frame.jsp</result>
     		<result name="findAll">/frame/listEmployee.jsp</result>
@@ -14,15 +27,18 @@
     		<result name="editUI_ok">/frame/editEmployee.jsp</result>
     		<result name="edit_ok" type="redirectAction">employee_findAll.action</result>
     		<result name="employee_delete_ok" type="redirectAction">employee_findAll.action</result>
+    		<interceptor-ref name="myStack"></interceptor-ref>
     	</action>
     	
     	<action name="department_*" class="departmentAction" method="{1}">
+    		<result name="login">/index.jsp</result>
     		<result name="findAll">/frame/listDep.jsp</result>
     		<result name="add_ok" type="redirectAction">department_findAll.action</result>
     		<result name="edit_ok">/frame/edit.jsp</result>
     		<result name="update_ok" type="redirectAction">department_findAll.action</result>
     		<result name="delete_ok" type="redirectAction">department_findAll.action</result>
     		<result name="show_ok">/3d_show.jsp</result>
+    		<interceptor-ref name="myStack"></interceptor-ref>
     	</action>
     	
     </package>
